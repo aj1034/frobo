@@ -1,0 +1,329 @@
+<?xml version="1.0" ?>
+
+<robot name="diff_drive_robo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find frobo)/model/robod.gazebo"/>
+
+  <!-- Base link -->
+  <link name="base_link"/>
+
+  <!-- Base footprint link -->
+
+  <joint name="footprint_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+    <origin xyz= "0 0 0" rpy="0 0 0"/>
+  </joint>
+  
+  <link name="base_footprint">
+  </link>
+  
+  
+      
+  <joint name="dummy_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+  </joint>
+
+  <!-- Chassis -->
+  <link name="chassis">
+    <inertial>
+      <origin xyz="1.3878E-17 -1.4901E-10 0.035" rpy="0 0 0" />
+      <mass value="5.5241076800961295"/>
+    <inertia ixx="0.018215" iyy="0.03263" izz="0.014783" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Back left wheel -->
+  <link name="back_left_wheel">
+    <inertial>
+      <origin xyz="-0.1 -0.038 0.035" rpy="0 0 0" />
+      <mass value="0.8878140839044747"/>
+      <inertia ixx="0.000555" iyy="0.000344" izz="0.000344" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/back_left_wheel.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/back_left_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="back_left_wheel_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="back_left_wheel" />
+    <axis xyz="1 0 0" />
+    <limit lower="-3.142" upper="3.142" effort="0" velocity="0" />
+    <dynamics damping="0.1" friction="0.5" />
+  </joint>
+  
+  <!-- Back right wheel -->
+  <link name="back_right_wheel">
+    <inertial>
+      <origin xyz="0.1 -0.038 0.035" rpy="0 0 0" />
+      <mass value="0.8878140839044747"/>
+      <inertia ixx="0.000555" iyy="0.000344" izz="0.000344" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/back_right_wheel.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/back_right_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="back_right_wheel_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="back_right_wheel" />
+    <axis xyz="-1 0 0" />
+    <limit lower="-3.142" upper="3.142" effort="0" velocity="0" />
+    <dynamics damping="0.1" friction="0.5" />
+  </joint>
+
+  <!-- Front left wheel -->
+  <link name="front_left_wheel">
+    <inertial>
+      <origin xyz="-0.1 0.042 0.035" rpy="0 0 0" />
+      <mass value="0.8878140839044747"/>
+      <inertia ixx="0.000555" iyy="0.000344" izz="0.000344" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/front_left_wheel.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/front_left_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="front_left_wheel_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="front_left_wheel" />
+    <axis xyz="1 0 0" />
+    <limit lower="-3.142" upper="3.142" effort="0" velocity="0" />
+    <dynamics damping="0.1" friction="0.5" />
+  </joint>
+  
+  <!-- Front left wheel -->
+  <link name="front_right_wheel">
+    <inertial>
+      <origin xyz="0.1 0.042 0.035" rpy="0 0 0" />
+      <mass value="0.8878140839044747"/>
+      <inertia ixx="0.000555" iyy="0.000344" izz="0.000344" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/front_right_wheel.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/front_right_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="front_right_wheel_joint" type="revolute">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="front_right_wheel" />
+    <axis xyz="-1 0 0" />
+    <limit lower="-3.142" upper="3.142" effort="0" velocity="0" />
+    <dynamics damping="0.1" friction="0.5" />
+  </joint>
+
+  <!-- Connecting Rods-->
+  <link name="connecting_rods">
+    <inertial>
+      <origin xyz="5.5511E-17 -1.4901E-10 0.075" rpy="0 0 0" />
+      <mass value="0.047124" />
+      <inertia 
+        ixx="3.9564E-05" 
+        ixy="0" 
+        ixz="0" 
+        iyy="3.9564E-05" 
+        iyz="0" 
+        izz="5.8905E-07" 
+      />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/connecting_rods.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/connecting_rods.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="connecting_rods_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="connecting_rods" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <!-- Upper Floor-->
+  <link name="upper_floor">
+    <inertial>
+      <origin xyz="-6.9389E-17 -0.0047489 0.135" rpy="0 0 0" />
+      <mass value="0.64039" />
+      <inertia 
+        ixx="0.0020181" 
+        ixy="0" 
+        ixz="0" 
+        iyy="0.0015115" 
+        iyz="0" 
+        izz="0.0034869" 
+      />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/upper_floor.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/upper_floor.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="upper_floor_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="connecting_rods" />
+    <child link="upper_floor" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <!-- Air Sampler-->
+  <link name="air_sampler">
+    <inertial>
+      <origin xyz="-3.5793E-07 0.0098758 0.23421" rpy="0 0 0" />
+      <mass value="0.57594" />
+      <inertia 
+        ixx="0.001596" 
+        ixy="0" 
+        ixz="0" 
+        iyy="0.0012296" 
+        iyz="0" 
+        izz="0.00077832" 
+      />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/air_sampler.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/air_sampler.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="sampler_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="upper_floor" />
+    <child link="air_sampler" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <!-- Lidar-->
+  <link name="lidar">
+    <inertial>
+      <origin xyz="5.4123E-16 -1.4901E-10 0.1025" rpy="0 0 0" />
+      <mass value="0.39015267359083405"/>
+      <inertia ixx="0.0001" iyy="6.9e-05" izz="0.0001" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/lidar.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.62745 0.62745 0.62745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="file://$(find frobo)/meshes/lidar.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="upper_floor" />
+    <child link="lidar" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+</robot>

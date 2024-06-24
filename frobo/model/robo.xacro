@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+
+<robot name="diff_drive_robo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+
+    <material name="orange">
+        <color rgba="1 0.3 0.1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+
+
+    <xacro:property name="chassis_x" value="1"/>
+    <xacro:property name="chassis_y" value="0.6"/>
+    <xacro:property name="chassis_z" value="0.3"/>
+
+    <xacro:property name="wheel_radius" value="0.15"/>
+    <xacro:property name="wheel_length" value="0.1"/>
+    <xacro:property name="wheel_z" value="0.1"/>
+
+    <xacro:property name="lmass" value="0.1" />
+    <xacro:property name="llength" value= "0.04"/>
+    <xacro:property name="lradius" value="0.05"/>
+
+    <xacro:property name="bw_d" value="2710"/>
+    <xacro:property name="pi" value="3.1416"/>
+
+    <xacro:property name="bodymass" value="${bw_d*chassis_x*chassis_y*chassis_z}"/>
+    <xacro:property name="wheelmass" value="${bw_d*pi*wheel_radius*wheel_radius*wheel_length}"/>
+
+    <xacro:property name="IZ_w" value="${0.5*wheelmass*wheel_radius*wheel_radius}"/>
+    <xacro:property name="I_w" value="${(1.0/12.0)*wheelmass*(3.0*wheel_radius*wheel_radius+wheel_length*wheel_length)}"/>
+
+    <xacro:macro name="inertia_wheel" params="wheelmass I_w IZ_w">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="${wheelmass}"/>
+            <inertia ixx="${I_w}" ixy="0.0" ixz="0.0" iyy="${I_w}" iyz="0" izz="${IZ_w}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:include filename="$(find frobo)/model/robod.gazebo"/>
+
+    <!-- Base link -->
+    <link name="base_link"/>
+
+     <!-- Base footprint link -->
+
+    <joint name="footprint_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="base_footprint"/>
+      <origin xyz= "0 0 0" rpy="0 0 0"/>
+    </joint>
+
+     <link name="base_footprint">
+     </link>
+
+
+    
+    <joint name="dummy_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="chassis"/>
+    </joint>
+
+    <!-- Chassis -->
+    <link name="chassis">
+        <visual>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <box size="${chassis_x} ${chassis_y} ${chassis_z}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <box size="${chassis_x+0.04} ${chassis_y+0.04} ${chassis_z+0.04}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0"/>
+            <mass value="${bodymass}"/>
+            <inertia ixx="${(1/12.0)*bodymass*(chassis_y*chassis_y+chassis_z*chassis_z)}" ixy="0.0" ixz="0.0" iyy="${(1/12.0)*bodymass*(chassis_x*chassis_x+chassis_z*chassis_z)}" iyz="0" izz="${(1/12.0)*bodymass*(chassis_y*chassis_y+chassis_x*chassis_x)}"/>
+        </inertial>    
+    </link>
+
+    <!-- Back right wheel -->
+    <joint name="back_right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="back_right_wheel"/>
+        <origin xyz="${-chassis_x/2 + 1.2*wheel_radius} ${-chassis_y/2 - wheel_length/2} ${-wheel_z}"/> 
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="back_right_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+            </geometry>
+            <material name="black"/>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_radius+0.01}}" length="${wheel_length+0.01}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </collision>
+        <xacro:inertia_wheel wheelmass="${wheelmass}" I_w="${I_w}" IZ_w="${IZ_w}"/>
+    </link>
+
+    <!-- Back left wheel -->
+    <joint name="back_left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="back_left_wheel"/>
+        <origin xyz="${-chassis_x/2 + 1.2*wheel_radius} ${chassis_y/2 + wheel_length/2} ${-wheel_z}"/> 
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="back_left_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_radius+0.01}" length="${wheel_length+0.01}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </collision>
+        <xacro:inertia_wheel wheelmass="${wheelmass}" I_w="${I_w}" IZ_w="${IZ_w}"/>
+    </link>
+
+    <!-- Front right wheel -->
+    <joint name="front_right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="front_right_wheel"/>
+        <origin xyz="${chassis_x/2 - 1.2*wheel_radius} ${-chassis_y/2 - wheel_length/2} ${-wheel_z}"/> 
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="front_right_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+            </geometry>
+            <material name="black"/>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_radius+0.01}" length="${wheel_length+0.01}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </collision>
+        <xacro:inertia_wheel wheelmass="${wheelmass}" I_w="${I_w}" IZ_w="${IZ_w}"/>
+    </link>
+
+    <!-- Front left wheel -->
+    <joint name="front_left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="front_left_wheel"/>
+        <origin xyz="${chassis_x/2 - 1.2*wheel_radius} ${chassis_y/2 + wheel_length/2} ${-wheel_z}"/> 
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="front_left_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${wheel_radius+0.01}" length="${wheel_length+0.01}"/>
+            </geometry>
+            <origin rpy="1.571 0 0" xyz="0 0 0"/>
+        </collision>
+        <xacro:inertia_wheel wheelmass="${wheelmass}" I_w="${I_w}" IZ_w="${IZ_w}"/>
+    </link>
+
+    <!-- LIDAR -->
+    <joint name="lidar_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="lidar"/>
+        <origin xyz="${chassis_x/2-0.1} 0 ${chassis_z/2 +0.04}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="lidar">
+        <visual>
+            <origin xyz="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.08"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.1+0.1" length="0.08+0.1"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${lmass}" />
+            <radius value="${lradius}" />
+            <length value="${llength}" />
+            <inertia ixx="${(1/12) * lmass * (3*lradius*lradius + llength*llength)}" ixy="0.0" ixz="0.0"
+                    iyy="${(1/12) * lmass * (3*lradius*lradius + llength*llength)}" iyz="0.0"
+                    izz="${(1/2) * lmass * (lradius*lradius)}" />
+        </inertial>
+        
+    </link>
+
+
+</robot>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<robot>
+
+<gazebo reference="chassis">
+ <material>Gazebo/Orange</material>
+</gazebo>
+
+<gazebo reference="front_left_wheel">
+ <mu1>0.2</mu1>
+ <mu2>0.2</mu2>
+ <material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="front_right_wheel">
+ <mu1>0.2</mu1>
+ <mu2>0.2</mu2>
+ <material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="back_left_wheel">
+ <mu1>0.2</mu1>
+ <mu2>0.2</mu2>
+ <material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="back_right_wheel">
+ <mu1>00.2</mu1>
+ <mu2>0.2</mu2>
+ <material>Gazebo/Black</material>
+</gazebo>
+
+<gazebo reference="sampler">
+    <material>Gazebo/White</material>
+   </gazebo>
+
+<gazebo reference="upper_floor">
+    <material>Gazebo/Orange</material>
+</gazebo>
+
+<gazebo reference="connecting_rods">
+    <material>Gazebo/Orange</material>
+</gazebo>
+
+
+
+  <gazebo reference="lidar">
+    <material>Gazebo/Red</material>
+
+    <sensor name="laser" type="ray">
+        <pose> 0 0 0 0 0 0 </pose>
+        <visualize>true</visualize>
+        <update_rate>10</update_rate>
+        <ray>
+            <scan>
+                <horizontal>
+                    <samples>360</samples>
+                    <resolution>1 </resolution>
+                    <min_angle>-3.14</min_angle>
+                    <max_angle>3.14</max_angle>
+                </horizontal>
+            </scan>
+            <range>
+                <min>0.3</min>
+                <max>12</max>
+                <resolution>0.01 </resolution>
+            </range>
+        </ray>
+        <plugin name="laser_controller" filename="libgazebo_ros_ray_sensor.so">
+            <ros>
+                <argument>~/out:=scan</argument>
+            </ros>
+            <output_type>sensor_msgs/LaserScan</output_type>
+            <frame_name>lidar</frame_name>
+        </plugin>
+    </sensor>
+</gazebo>
+
+
+</robot>
